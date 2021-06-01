@@ -1,0 +1,7 @@
+<div class="center-all container">
+  <mat-form-field>
+    <input matInput placeholder="Window route" #routeToOpenOn>
+    <mat-hint>the route to open the new window</mat-hint>
+  </mat-form-field>
+  <button mat-raised-button color="warn" (click)="openWindow(routeToOpenOn.value)">open new window</button>
+</div>

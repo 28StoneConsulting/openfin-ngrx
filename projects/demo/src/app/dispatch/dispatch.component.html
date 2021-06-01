@@ -1,0 +1,40 @@
+<div>
+  <h2 class="center-all">dispatch</h2>
+  <div id="parent-actions">
+    <button class="parent-action" mat-flat-button color="warn" (click)="sendToParent('decrement')">decrement on parent
+    </button>
+    <button class='parent-action' mat-flat-button color="primary" (click)="sendToParent('increment')">increment on
+      parent
+    </button>
+  </div>
+  <div class="dispatch-container">
+    <div class='outer-actions'>
+      <mat-form-field class="example-full-width">
+        <input matInput placeholder="Window Route" #destinationWindowRout>
+        <mat-hint>The window route we want to change</mat-hint>
+      </mat-form-field>
+      <div class="button-actions">
+        <button mat-flat-button color="warn" (click)="sendToRoute('decrement',destinationWindowRout.value)">decrement on
+          route
+        </button>
+        <button mat-flat-button color="primary" (click)="sendToRoute('increment',destinationWindowRout.value)">increment
+          on route
+        </button>
+      </div>
+    </div>
+    <div class="outer-actions">
+      <mat-form-field class="example-full-width">
+        <input matInput placeholder="Window ID" #destinationWindowId>
+        <mat-hint>The window ID we want to change</mat-hint>
+      </mat-form-field>
+      <div class="button-actions">
+        <button mat-flat-button color="warn" (click)="sendToId('decrement',destinationWindowId.value)">
+          decrement on ID
+        </button>
+        <button mat-flat-button color="primary" (click)="sendToId('increment', destinationWindowId.value)">
+          increment on ID
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

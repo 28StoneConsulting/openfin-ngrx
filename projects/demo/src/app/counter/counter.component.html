@@ -1,0 +1,9 @@
+<div class="container">
+  <h2 class="center-all">Counter</h2>
+  <div id="counter" class="center-all">
+    <button mat-mini-fab (click)="decrement()">-</button>
+    <div id="count-value"> {{ count$ | async }}</div>
+    <button mat-mini-fab (click)="increment()">+</button>
+    <button mat-raised-button color="primary" (click)="reset()">Reset Counter</button>
+  </div>
+</div>

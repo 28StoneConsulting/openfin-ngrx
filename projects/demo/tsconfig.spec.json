@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../out-tsc/spec",
+    "types": ["jasmine", "node"],
+    "paths": {
+      "openfin-ngrx": ["projects/openfin-ngrx/src/public-api.ts"]
+    }
+  },
+  "files": ["src/test.ts", "src/polyfills-test.ts"],
+  "include": ["**/*.spec.ts", "**/*.d.ts"],
+  "exclude": ["dist", "release", "node_modules"]
+}

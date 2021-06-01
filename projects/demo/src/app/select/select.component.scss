@@ -1,0 +1,9 @@
+.center-children > * {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+mat-radio-group > * {
+  margin-left: 10px;
+}

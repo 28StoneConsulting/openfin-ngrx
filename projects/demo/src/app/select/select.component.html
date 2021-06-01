@@ -1,0 +1,23 @@
+<div class="center-children">
+  <h2>select</h2>
+  <div class="space-bottom">
+    <span>select counter from:</span>
+    <mat-radio-group aria-label="Select an option" [(ngModel)]="selectFrom">
+      <mat-radio-button value="id">window</mat-radio-button>
+      <mat-radio-button value="parent">parent window</mat-radio-button>
+    </mat-radio-group>
+  </div>
+  <div *ngIf="selectFrom==='id'; else selectFromParent">
+    <mat-form-field class="space-bottom">
+      <input matInput placeholder="window id" #windowId>
+      <mat-hint>window id to select from</mat-hint>
+    </mat-form-field>
+    <button mat-flat-button color="primary" (click)="selectCounterFromWindow(windowId.value)">select</button>
+  </div>
+  <ng-template #selectFromParent>
+    <div>
+      <button mat-flat-button color="primary" (click)="selectCounterFromParent()">select from parent</button>
+    </div>
+  </ng-template>
+  <p>the counter in selected window is : {{counter}}</p>
+</div>

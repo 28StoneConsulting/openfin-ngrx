@@ -1,0 +1,27 @@
+@import url("https://fonts.googleapis.com/css?family=Raleway|Roboto:500&display=swap&subset=latin-ext");
+/* You can add global styles to this file, and also import other style files */
+html,
+body {
+  margin: 0 0;
+  padding: 0 0;
+  height: 100%;
+  background-color: white;
+}
+
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.space-bottom {
+  margin-bottom: 10px;
+}
+
+.center-all {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h2 {
+  font-family: "Raleway", sans-serif;
+}

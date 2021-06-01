@@ -1,0 +1,10 @@
+<h2 class="center-all">window manager</h2>
+<p class="viga center-all">Window ID: {{this.winId}}</p>
+<p class="viga center-all">Window route: {{this.windowRoute$|async}}</p>
+<div class="center-all">
+  <mat-form-field>
+    <input matInput placeholder="/path/to/navigate" type="url" #navigateTo>
+    <mat-hint>change this window route to:</mat-hint>
+  </mat-form-field>
+  <button class="space" mat-raised-button color="warn" [routerLink]="navigateTo.value">navigate</button>
+</div>
