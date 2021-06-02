@@ -16,11 +16,11 @@ OpenfinNgrx delivers an Angular service with the following methods:
 
 `dispatchToParent` - Dispatch NGRX action to the window parent.
 
-`dispatchToId` - Dispatch NGRX action to a specific Openfin window that matches the given id.
+`dispatchToWindow` - Dispatch NGRX action to a specific Openfin window that matches the given window name.
 
 `dispatchToRoute` - Dispatch NGRX action to all windows on the specific route.
 
-`selectFromId` - select data from the state of the window that matches the given id.
+`selectFromWindow` - select data from the state of the window that matches the given window name.
 
 `selectFromParent` - select data from parent window state.
 
