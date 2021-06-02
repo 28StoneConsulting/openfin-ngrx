@@ -2,7 +2,6 @@ import { Component, OnInit } from "@angular/core";
 import { map } from "rxjs/operators";
 import { ActivatedRoute, UrlSegment } from "@angular/router";
 import { Observable } from "rxjs";
-import { ElectronService } from "../providers/electron.service";
 
 @Component({
   selector: "window-manager",
@@ -10,16 +9,13 @@ import { ElectronService } from "../providers/electron.service";
   styleUrls: ["./window-manager.component.scss"],
 })
 export class WindowManagerComponent implements OnInit {
-  winId: number;
+  windowName: string;
   windowRoute$: Observable<string>;
 
-  constructor(
-    private electronService: ElectronService,
-    private activatedRoute: ActivatedRoute
-  ) {}
+  constructor(private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
-    this.winId = this.electronService.remote.getCurrentWindow().id;
+    this.windowName = fin.me.name;
     this.windowRoute$ = this.activatedRoute.url.pipe(
       map(
         (urlSegments: UrlSegment[]) =>

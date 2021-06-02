@@ -1,11 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "../out-tsc/app",
-    "types": [],
-    "paths": {
-      "openfin-ngrx": ["projects/openfin-ngrx/src/public-api.ts"]
-    }
+    "outDir": "../out-tsc/app"
   },
   "files": ["src/main.ts", "src/polyfills.ts"],
   "include": ["projects/demo/src/**/*.d.ts"]

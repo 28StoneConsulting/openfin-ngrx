@@ -5,6 +5,6 @@ export interface MessageWithReplay<T> {
 
 export interface Message {
   data: any;
-  senderId: number;
+  senderName: string;
   messageId: number;
 }

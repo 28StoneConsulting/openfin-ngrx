@@ -12,90 +12,102 @@ import {
   withLatestFrom,
 } from "rxjs/operators";
 import { NavigationEnd, Router } from "@angular/router";
-import { BrowserWindow, ipcRenderer, remote } from "electron";
 import { communicationChannel } from "./communication-channels";
 import { MessageWithReplay, Message } from "../models/message";
 import { SubscriptionCommand } from "./subscription-command";
+import { _Window } from "openfin/_v2/api/window/window";
+import { Identity } from "openfin/_v2/shapes/Identity";
 
 interface SubscriptionRequest<T> {
   data: T;
   messageId: number;
-  senderId: number;
+  senderIdentity: Identity;
 }
 
 @Injectable()
 export class WindowCommunicationService {
   private static messagesCounter = 0;
-  private ipcRenderer: typeof ipcRenderer;
-  private remote: typeof remote;
-  private readonly myId: number;
   private replay: Observable<any>;
-  private parentWindow: BrowserWindow;
+  private parentWindow: _Window;
+  private window: _Window = fin.Window.getCurrentSync();
   subscription: Observable<{}>;
 
   constructor(private router: Router) {
-    const electron = window.require("electron");
-    this.ipcRenderer = electron.ipcRenderer;
-    this.remote = electron.remote;
-    this.myId = electron.remote.getCurrentWindow().id;
-    this.parentWindow = this.remote.getCurrentWindow().getParentWindow();
-    this.replay = fromEvent(this.ipcRenderer, communicationChannel.replay).pipe(
-      map(this.extractDataFromEvent),
+    fin.Window.getCurrentSync()
+      .getParentWindow()
+      .then((parent) => (this.parentWindow = parent));
+    this.replay = this.listenToChannel(communicationChannel.replay).pipe(
       share()
     );
-    this.subscription = fromEvent(
-      this.ipcRenderer,
+    this.subscription = this.listenToChannel(
       communicationChannel.subscription
-    ).pipe(map(this.extractDataFromEvent));
+    ).pipe(share());
   }
 
-  generateMessageId(): number {
-    return Number(
-      this.myId + "" + WindowCommunicationService.messagesCounter++
-    );
+  generateMessageId(): string {
+    return `${fin.me.uuid}_${
+      fin.me.name
+    }_${WindowCommunicationService.messagesCounter++}`;
   }
 
   listenToParentChannel<T>(): Observable<MessageWithReplay<T>> {
-    return this.listenToIpcRenderer<T>(communicationChannel.parent);
+    return this.listenToChannel<Message>(communicationChannel.parent).pipe(
+      map<Message, MessageWithReplay<T>>(this.addReplayToMessage)
+    );
   }
 
-  listenToIdChannel<T>(): Observable<MessageWithReplay<T>> {
-    return this.listenToIpcRenderer<T>(communicationChannel.id);
+  listenToWindowNameChannel<T>(): Observable<MessageWithReplay<T>> {
+    return this.listenToChannel<Message>(communicationChannel.window).pipe(
+      map<Message, MessageWithReplay<T>>(this.addReplayToMessage)
+    );
   }
 
   listenToRouteChannel<T>(): Observable<{ data: T }> {
-    return fromEvent(this.remote.ipcMain, communicationChannel.route).pipe(
-      map<any, { route: string; data: T }>(this.extractDataFromEvent),
-      withLatestFrom(this.getWindowRoute(), (message, myRoute) => ({
-        message,
-        myRoute,
-      })),
-      filter(({ myRoute, message }) => myRoute === message.route),
+    return this.listenToChannel(communicationChannel.route).pipe(
+      withLatestFrom(
+        this.getWindowRoute(),
+        (message: { route: string; data: T }, myRoute) => ({
+          message,
+          myRoute,
+        })
+      ),
+      filter(({ myRoute, message }) => myRoute.startsWith(message.route)),
       map(({ message }) => ({ data: message.data }))
     );
   }
 
   sendToRoute<T>(route: string, data: T): void {
-    this.ipcRenderer.send(communicationChannel.route, { data, route });
+    fin.InterApplicationBus.publish(communicationChannel.route, {
+      data,
+      route,
+    });
   }
 
   sendToParent<T, R>(data: T): Observable<R> {
     const messageId = this.generateMessageId();
-    this.parentWindow.webContents.send(communicationChannel.parent, {
-      data,
-      senderId: this.myId,
-      messageId,
-    });
+    fin.InterApplicationBus.send(
+      this.parentWindow.identity,
+      communicationChannel.parent,
+      {
+        data,
+        senderIdentity: this.window.identity,
+        messageId,
+      }
+    );
     return this.getReplayByMessageId<R>(messageId);
   }
 
-  sendToId<T, R>(windowId: number, data: T): Observable<R> {
+  sendToWindow<T, R>(windowName: string, data: T): Observable<R> {
     const messageId = this.generateMessageId();
-    this.sendToWindow(communicationChannel.id, windowId, {
-      data,
-      senderId: this.myId,
-      messageId,
-    });
+    this.sendToWindowChannel(
+      communicationChannel.window,
+      { uuid: fin.me.uuid, name: windowName },
+      {
+        data,
+        senderIdentity: this.window.identity,
+        messageId,
+      }
+    );
     return this.getReplayByMessageId<R>(messageId);
   }
 
@@ -106,15 +118,15 @@ export class WindowCommunicationService {
         response: (observable: Observable<any>) => {
           const channel = communicationChannel.subscription + message.messageId;
           const cleanup = this.onWindowClose(
-            this.remote.BrowserWindow.fromId(message.senderId)
+            fin.Window.wrapSync(message.senderIdentity)
           );
           this.sendObservableOnChannel(
             channel,
             cleanup,
             observable,
-            message.senderId
+            message.senderIdentity
           );
-          this.sendToWindow(channel, message.senderId, {
+          this.sendToWindowChannel(channel, message.senderIdentity, {
             type: SubscriptionCommand.listening,
           });
         },
@@ -127,26 +139,26 @@ export class WindowCommunicationService {
     channel: string,
     cleanup: Observable<void>,
     srcObservable: Observable<any>,
-    windowId: number
+    windowIdentity: Identity
   ) {
     let subscription: Subscription;
-    fromEvent(this.ipcRenderer, channel)
-      .pipe(map(this.extractDataFromEvent), takeUntil(cleanup))
+    this.listenToChannel(channel)
+      .pipe(takeUntil(cleanup))
       .subscribe((command: { type: SubscriptionCommand }) => {
         if (command.type === SubscriptionCommand.subscribe) {
           subscription = srcObservable.pipe(takeUntil(cleanup)).subscribe(
             (data) =>
-              this.sendToWindow(channel, windowId, {
+              this.sendToWindowChannel(channel, windowIdentity, {
                 type: SubscriptionCommand.next,
                 data,
               }),
             (error) =>
-              this.sendToWindow(channel, windowId, {
+              this.sendToWindowChannel(channel, windowIdentity, {
                 type: SubscriptionCommand.error,
                 data: error,
               }),
             () =>
-              this.sendToWindow(channel, windowId, {
+              this.sendToWindowChannel(channel, windowIdentity, {
                 type: SubscriptionCommand.complete,
               })
           );
@@ -160,33 +172,36 @@ export class WindowCommunicationService {
     return this.subscribeToWindow<T, R>(this.parentWindow, data);
   }
 
-  subscribeToWindowById<T, R>(id: number, data: T): Observable<R> {
+  subscribeToWindowByName<T, R>(name: string, data: T): Observable<R> {
     return this.subscribeToWindow<T, R>(
-      this.remote.BrowserWindow.fromId(id),
+      fin.Window.wrapSync({ uuid: fin.me.uuid, name }),
       data
     );
   }
 
-  private subscribeToWindow<T, R>(
-    window: BrowserWindow,
-    data: T
-  ): Observable<R> {
+  private subscribeToWindow<T, R>(window: _Window, data: T): Observable<R> {
     const messageId = this.generateMessageId();
     const channel = communicationChannel.subscription + messageId;
     const waitForWindowToListen = this.waitForWindowToListen(channel);
-    window.webContents.send(communicationChannel.subscription, {
-      data,
-      messageId,
-      senderId: this.myId,
-    });
+
+    fin.InterApplicationBus.send(
+      window.identity,
+      communicationChannel.subscription,
+      {
+        data,
+        messageId,
+        senderIdentity: this.window.identity,
+      }
+    );
+
     return from(waitForWindowToListen).pipe(
-      switchMap(this.chanelSubscriptionToObservable<R>(window, channel)),
+      switchMap(this.channelSubscriptionToObservable<R>(window, channel)),
       share()
     );
   }
 
-  private chanelSubscriptionToObservable<T>(
-    window: BrowserWindow,
+  private channelSubscriptionToObservable<T>(
+    window: _Window,
     channel: string
   ): () => Observable<T> {
     return () =>
@@ -198,8 +213,9 @@ export class WindowCommunicationService {
             subscriber.complete();
             cleanup.next();
           });
-        fromEvent(this.ipcRenderer, channel)
-          .pipe(map(this.extractDataFromEvent), takeUntil(cleanup))
+
+        this.listenToChannel(channel)
+          .pipe(takeUntil(cleanup))
           .subscribe(
             (messageData: { type: SubscriptionCommand; data: any }) => {
               if (messageData.type === SubscriptionCommand.complete) {
@@ -212,28 +228,33 @@ export class WindowCommunicationService {
               }
             }
           );
-        window.webContents.send(channel, {
+
+        this.sendToWindowChannel(channel, window.identity, {
           type: SubscriptionCommand.subscribe,
         });
+
         return () => {
-          window.webContents.send(channel, SubscriptionCommand.unsubscribe);
+          this.sendToWindowChannel(channel, window.identity, {
+            type: SubscriptionCommand.unsubscribe,
+          });
+
           cleanup.next();
         };
       });
-  }
-
-  private extractDataFromEvent<T>([event, data]: [Event, T]): T {
-    return data;
   }
 
   private addReplayToMessage<T>(message: Message): MessageWithReplay<T> {
     return {
       data: message.data,
       replay: (replayMessage: any) =>
-        this.sendToWindow(communicationChannel.replay, message.senderId, {
-          data: replayMessage,
-          messageId: message.messageId,
-        }),
+        this.sendToWindowChannel(
+          communicationChannel.replay,
+          { uuid: fin.me.uuid, name: message.senderName },
+          {
+            data: replayMessage,
+            messageId: message.messageId,
+          }
+        ),
     };
   }
 
@@ -252,26 +273,40 @@ export class WindowCommunicationService {
     );
   }
 
-  private sendToWindow(chanel: string, id: number, data): void {
-    this.remote.BrowserWindow.fromId(id).webContents.send(chanel, data);
+  private sendToWindowChannel(channel: string, identity: Identity, data): void {
+    fin.InterApplicationBus.send(identity, channel, data);
   }
 
-  private listenToIpcRenderer<T>(
-    eventName: string
-  ): Observable<MessageWithReplay<T>> {
-    return fromEvent(this.ipcRenderer, eventName).pipe(
-      map<any, Message>(this.extractDataFromEvent),
-      map((data) => this.addReplayToMessage<T>(data))
-    );
+  private listenToChannel<T>(channelName: string): Observable<T> {
+    return new Observable<T>((observer) => {
+      const listener = (data) => {
+        observer.next(data);
+      };
+
+      fin.InterApplicationBus.subscribe(
+        { uuid: fin.me.uuid },
+        channelName,
+        listener
+      ).catch((error) => observer.error(error));
+
+      return () => {
+        fin.InterApplicationBus.unsubscribe(
+          { uuid: fin.me.uuid },
+          channelName,
+          listener
+        );
+      };
+    });
   }
 
-  private onWindowClose(window: BrowserWindow): Observable<any> {
+  private onWindowClose(window: _Window): Observable<any> {
     return fromEvent(window, "closed").pipe(first());
   }
 
   private waitForWindowToListen(channel: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.ipcRenderer.once(channel, (event, data: { type: string }) => {
+      const identity = { uuid: fin.me.uuid, name: fin.me.name };
+      const listener = (data: { type: string }) => {
         data.type === SubscriptionCommand.listening
           ? resolve()
           : // tslint:disable-next-line:max-line-length
@@ -282,7 +317,13 @@ export class WindowCommunicationService {
                 data
               )}  please open issue in our github repository`
             );
-      });
+
+        fin.InterApplicationBus.unsubscribe(identity, channel, listener);
+      };
+
+      fin.InterApplicationBus.subscribe(identity, channel, listener).catch(
+        (error) => reject(error)
+      );
     });
   }
 }

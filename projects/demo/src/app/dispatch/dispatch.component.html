@@ -24,15 +24,15 @@
     </div>
     <div class="outer-actions">
       <mat-form-field class="example-full-width">
-        <input matInput placeholder="Window ID" #destinationWindowId>
-        <mat-hint>The window ID we want to change</mat-hint>
+        <input matInput placeholder="Window name" #destinationWindowName>
+        <mat-hint>The window name we want to change</mat-hint>
       </mat-form-field>
       <div class="button-actions">
-        <button mat-flat-button color="warn" (click)="sendToId('decrement',destinationWindowId.value)">
-          decrement on ID
+        <button mat-flat-button color="warn" (click)="sendToWindow('decrement',destinationWindowName.value)">
+          decrement on window name
         </button>
-        <button mat-flat-button color="primary" (click)="sendToId('increment', destinationWindowId.value)">
-          increment on ID
+        <button mat-flat-button color="primary" (click)="sendToWindow('increment', destinationWindowName.value)">
+          increment on window name
         </button>
       </div>
     </div>

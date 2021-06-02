@@ -1,4 +1,4 @@
-import { ApplicationRef, Injectable, NgZone } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import { WindowCommunicationService } from "./window-communication.service";
 import { Action, select, Store } from "@ngrx/store";
 import { merge, Observable } from "rxjs";
@@ -33,7 +33,6 @@ interface SelectorEvaluationRequest {
 @Injectable()
 export class OpenfinNgrxService {
   constructor(
-    private appRef: ApplicationRef,
     private ngZone: NgZone,
     private store: Store<any>,
     private windowCommunicationService: WindowCommunicationService
@@ -41,8 +40,9 @@ export class OpenfinNgrxService {
     const myMessages = merge<MessageWithReplay<EvaluationRequest>>(
       this.windowCommunicationService.listenToParentChannel(),
       this.windowCommunicationService.listenToRouteChannel(),
-      this.windowCommunicationService.listenToIdChannel()
+      this.windowCommunicationService.listenToWindowNameChannel()
     ).pipe(share());
+
     myMessages
       .pipe(
         map((message) => message.data),
@@ -52,6 +52,7 @@ export class OpenfinNgrxService {
       .subscribe((action: Action) => {
         ngZone.run(() => this.store.dispatch(action));
       });
+
     this.windowCommunicationService
       .listenToSubscriptionRequest<SelectorEvaluationRequest>()
       .pipe(filter((message) => message.data.command === ngrxCommand.select))
@@ -70,11 +71,14 @@ export class OpenfinNgrxService {
     });
   }
 
-  dispatchToId(action: Action, id: number): void {
-    this.windowCommunicationService.sendToId<EvaluationRequest, void>(id, {
-      command: ngrxCommand.dispatch,
-      payload: action,
-    });
+  dispatchToWindow(action: Action, windowName: string): void {
+    this.windowCommunicationService.sendToWindow<EvaluationRequest, void>(
+      windowName,
+      {
+        command: ngrxCommand.dispatch,
+        payload: action,
+      }
+    );
   }
 
   dispatchToRoute(action: Action, route: string): void {
@@ -84,16 +88,22 @@ export class OpenfinNgrxService {
     });
   }
 
-  selectFromId<T>(id: number, selector: selectorFunction): Observable<T> {
-    return this.selectFromWindow<T>(
+  selectFromWindow<T>(
+    windowName: string,
+    selector: selectorFunction
+  ): Observable<T> {
+    return this.selectFromWindowInternal<T>(
       (data: EvaluationRequest) =>
-        this.windowCommunicationService.subscribeToWindowById(id, data),
+        this.windowCommunicationService.subscribeToWindowByName(
+          windowName,
+          data
+        ),
       selector
     );
   }
 
   selectFromParent<T>(selector: selectorFunction, props?): Observable<T> {
-    return this.selectFromWindow<T>(
+    return this.selectFromWindowInternal<T>(
       (data: EvaluationRequest) =>
         this.windowCommunicationService.subscribeToParent(data),
       selector,
@@ -101,7 +111,7 @@ export class OpenfinNgrxService {
     );
   }
 
-  private selectFromWindow<T>(
+  private selectFromWindowInternal<T>(
     communicationFunction: (data: EvaluationRequest) => Observable<T>,
     selector: selectorFunction,
     props?

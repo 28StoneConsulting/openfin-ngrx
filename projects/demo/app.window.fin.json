@@ -1,0 +1,15 @@
+{
+  "devtools_port": 9090,
+  "licenseKey": "request-a-key",
+  "startup_app": {
+    "name": "openfin-ngrx demo",
+    "description": "openfin-ngrx demo",
+    "url": "http://localhost:4200/",
+    "uuid": "openfin-ngrx-demo",
+    "autoShow": true,
+    "applicationIcon": "http://localhost:4200/favicon.ico"
+  },
+  "runtime": {
+    "version": "stable"
+  }
+}

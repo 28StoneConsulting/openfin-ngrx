@@ -13,9 +13,9 @@ export class SelectComponent {
 
   constructor(private electronNgrxService: OpenfinNgrxService) {}
 
-  selectCounterFromWindow(windowId: string) {
+  selectCounterFromWindow(windowName: string) {
     this.electronNgrxService
-      .selectFromId<number>(parseInt(windowId, 10), selectCounter)
+      .selectFromWindow<number>(windowName, selectCounter)
       .subscribe((data) => (this.counter = data));
   }
 

@@ -1,5 +1,4 @@
 import { Component } from "@angular/core";
-import { ElectronService } from "../providers/electron.service";
 
 @Component({
   selector: "app-new-window",
@@ -7,21 +6,14 @@ import { ElectronService } from "../providers/electron.service";
   styleUrls: ["./new-window.component.scss"],
 })
 export class NewWindowComponent {
-  constructor(private electronService: ElectronService) {}
+  constructor() {}
 
   openWindow(route) {
-    const BrowserWindow = this.electronService.remote.BrowserWindow;
-    const newWin = new BrowserWindow({
-      height: 800,
-      width: 650,
-      webPreferences: {
-        nodeIntegration: true,
-        enableRemoteModule: true,
-        contextIsolation: false,
-      },
-      parent: this.electronService.remote.getCurrentWindow(),
-      resizable: true,
+    fin.Window.create({
+      defaultHeight: 800,
+      defaultWidth: 650,
+      name: route,
+      url: window.location.origin + route,
     });
-    newWin.loadURL(window.location.origin + route);
   }
 }

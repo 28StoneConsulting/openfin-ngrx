@@ -1,19 +1,18 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import {NewWindowComponent} from './new-window.component';
-import {ElectronService} from '../providers/electron.service';
+import { NewWindowComponent } from "./new-window.component";
 
-describe('NewWindowComponent', () => {
+describe("NewWindowComponent", () => {
   let component: NewWindowComponent;
   let fixture: ComponentFixture<NewWindowComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [NewWindowComponent],
-      providers: [ElectronService]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [NewWindowComponent],
+      }).compileComponents();
     })
-      .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NewWindowComponent);
@@ -21,7 +20,7 @@ describe('NewWindowComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

@@ -23,10 +23,10 @@ export class DispatchComponent {
     );
   }
 
-  sendToId(action: string, id: string) {
-    this.electronNgrx.dispatchToId(
+  sendToWindow(action: string, windowName: string) {
+    this.electronNgrx.dispatchToWindow(
       action === "increment" ? increment() : decrement(),
-      parseInt(id, 10)
+      windowName
     );
   }
 }

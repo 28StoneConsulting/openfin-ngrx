@@ -9,10 +9,10 @@
   </div>
   <div *ngIf="selectFrom==='id'; else selectFromParent">
     <mat-form-field class="space-bottom">
-      <input matInput placeholder="window id" #windowId>
-      <mat-hint>window id to select from</mat-hint>
+      <input matInput placeholder="window name" #windowName>
+      <mat-hint>window name to select from</mat-hint>
     </mat-form-field>
-    <button mat-flat-button color="primary" (click)="selectCounterFromWindow(windowId.value)">select</button>
+    <button mat-flat-button color="primary" (click)="selectCounterFromWindow(windowName.value)">select</button>
   </div>
   <ng-template #selectFromParent>
     <div>

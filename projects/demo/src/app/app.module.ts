@@ -5,7 +5,7 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { AppRoutingModule } from "./app-routing.module";
-import { ElectronService } from "./providers/electron.service";
+import { OpenfinService } from "./providers/openfin.service";
 import { AppComponent } from "./app.component";
 import { StoreModule } from "@ngrx/store";
 import { counterReducer } from "./counter/state/counter.reducer";
@@ -57,7 +57,7 @@ import { MatDividerModule } from "@angular/material/divider";
     MatButtonModule,
     MatInputModule,
   ],
-  providers: [ElectronService],
+  providers: [OpenfinService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

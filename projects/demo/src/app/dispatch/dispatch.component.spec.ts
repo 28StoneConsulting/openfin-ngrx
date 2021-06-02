@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
 import { DispatchComponent } from "./dispatch.component";
 import { FormsModule } from "@angular/forms";
-import { ElectronService } from "../providers/electron.service";
 import { OpenfinNgrxService } from "openfin-ngrx";
 
 describe("IpcComponent", () => {
@@ -15,15 +14,7 @@ describe("IpcComponent", () => {
       TestBed.configureTestingModule({
         declarations: [DispatchComponent],
         imports: [FormsModule],
-        providers: [
-          {
-            provide: ElectronService,
-            useValue: {
-              remote: { getCurrentWindow: () => ({ id: mockWindId }) },
-            },
-          },
-          { provide: OpenfinNgrxService, useValue: {} },
-        ],
+        providers: [{ provide: OpenfinNgrxService, useValue: {} }],
       }).compileComponents();
     })
   );
