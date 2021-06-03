@@ -5,7 +5,6 @@
 Synchronizing multiple OpenFin windows to a single state or in some cases multiple states is a difficult task which results in complex management and repetitive code.
 
 Implementing such a communication solution for multiple windows that transfer a decent amount of data between them takes a lot of effort, especially if you have multiple states that are shared.
-Basically you will find yourself building a rest API.
 
 ### The solution
 
@@ -16,11 +15,11 @@ OpenfinNgrx delivers an Angular service with the following methods:
 
 `dispatchToParent` - Dispatch NGRX action to the window parent.
 
-`dispatchToId` - Dispatch NGRX action to a specific Openfin window that matches the given id.
+`dispatchToWindow` - Dispatch NGRX action to a specific Openfin window that matches the given window name.
 
 `dispatchToRoute` - Dispatch NGRX action to all windows on the specific route.
 
-`selectFromId` - select data from the state of the window that matches the given id.
+`selectFromWindow` - select data from the state of the window that matches the given window name.
 
 `selectFromParent` - select data from parent window state.
 
