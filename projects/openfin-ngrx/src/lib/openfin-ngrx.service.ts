@@ -10,9 +10,9 @@ import {
 } from "./selector-manager";
 import { MessageWithReplay } from "../models/message";
 
-const enum ngrxCommand {
-  dispatch,
-  select,
+const enum NgrxCommand {
+  dispatch = "dispatch",
+  select = "select",
 }
 
 interface SelectorPayload {
@@ -21,12 +21,12 @@ interface SelectorPayload {
 }
 
 interface EvaluationRequest {
-  command: ngrxCommand;
+  command: NgrxCommand;
   payload: any;
 }
 
 interface SelectorEvaluationRequest {
-  command: ngrxCommand;
+  command: NgrxCommand;
   payload: SelectorPayload;
 }
 
@@ -46,7 +46,7 @@ export class OpenfinNgrxService {
     myMessages
       .pipe(
         map((message) => message.data),
-        filter((data) => data.command === ngrxCommand.dispatch),
+        filter((data) => data.command === NgrxCommand.dispatch),
         map((data) => data.payload)
       )
       .subscribe((action: Action) => {
@@ -55,7 +55,7 @@ export class OpenfinNgrxService {
 
     this.windowCommunicationService
       .listenToSubscriptionRequest<SelectorEvaluationRequest>()
-      .pipe(filter((message) => message.data.command === ngrxCommand.select))
+      .pipe(filter((message) => message.data.command === NgrxCommand.select))
       .subscribe((message) => {
         const selector = getSelectorByHash(message.data.payload.hash);
         message.response(
@@ -66,7 +66,7 @@ export class OpenfinNgrxService {
 
   dispatchToParent(action: Action): void {
     this.windowCommunicationService.sendToParent({
-      command: ngrxCommand.dispatch,
+      command: NgrxCommand.dispatch,
       payload: action,
     });
   }
@@ -75,7 +75,7 @@ export class OpenfinNgrxService {
     this.windowCommunicationService.sendToWindow<EvaluationRequest, void>(
       windowName,
       {
-        command: ngrxCommand.dispatch,
+        command: NgrxCommand.dispatch,
         payload: action,
       }
     );
@@ -83,7 +83,7 @@ export class OpenfinNgrxService {
 
   dispatchToRoute(action: Action, route: string): void {
     this.windowCommunicationService.sendToRoute(route, {
-      command: ngrxCommand.dispatch,
+      command: NgrxCommand.dispatch,
       payload: action,
     });
   }
@@ -118,7 +118,7 @@ export class OpenfinNgrxService {
   ): Observable<T> {
     const hash = getSelectorHash(selector);
     const srcObservable = communicationFunction({
-      command: ngrxCommand.select,
+      command: NgrxCommand.select,
       payload: { hash, props },
     });
     const insideZone = new Observable<T>((subscriber) => {

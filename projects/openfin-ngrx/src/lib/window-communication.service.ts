@@ -29,16 +29,19 @@ export class WindowCommunicationService {
   private static messagesCounter = 0;
   private replay: Observable<any>;
   private parentWindow: _Window;
-  private window: _Window = fin.Window.getCurrentSync();
+  private window: _Window;
   subscription: Observable<{}>;
 
   constructor(private router: Router) {
+    this.window = fin.Window.getCurrentSync();
+
     fin.Window.getCurrentSync()
       .getParentWindow()
       .then((parent) => (this.parentWindow = parent));
     this.replay = this.listenToChannel(communicationChannel.replay).pipe(
       share()
     );
+
     this.subscription = this.listenToChannel(
       communicationChannel.subscription
     ).pipe(share());
@@ -113,24 +116,27 @@ export class WindowCommunicationService {
 
   listenToSubscriptionRequest<T>() {
     return this.subscription.pipe(
-      map((message: SubscriptionRequest<T>) => ({
-        data: message.data,
-        response: (observable: Observable<any>) => {
-          const channel = communicationChannel.subscription + message.messageId;
-          const cleanup = this.onWindowClose(
-            fin.Window.wrapSync(message.senderIdentity)
-          );
-          this.sendObservableOnChannel(
-            channel,
-            cleanup,
-            observable,
-            message.senderIdentity
-          );
-          this.sendToWindowChannel(channel, message.senderIdentity, {
-            type: SubscriptionCommand.listening,
-          });
-        },
-      })),
+      map((message: SubscriptionRequest<T>) => {
+        return {
+          data: message.data,
+          response: (observable: Observable<any>) => {
+            const channel =
+              communicationChannel.subscription + message.messageId;
+            const cleanup = this.onWindowClose(
+              fin.Window.wrapSync(message.senderIdentity)
+            );
+            this.sendObservableOnChannel(
+              channel,
+              cleanup,
+              observable,
+              message.senderIdentity
+            );
+            this.sendToWindowChannel(channel, message.senderIdentity, {
+              type: SubscriptionCommand.listening,
+            });
+          },
+        };
+      }),
       share()
     );
   }
@@ -305,7 +311,6 @@ export class WindowCommunicationService {
 
   private waitForWindowToListen(channel: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      const identity = { uuid: fin.me.uuid, name: fin.me.name };
       const listener = (data: { type: string }) => {
         data.type === SubscriptionCommand.listening
           ? resolve()
@@ -318,12 +323,18 @@ export class WindowCommunicationService {
               )}  please open issue in our github repository`
             );
 
-        fin.InterApplicationBus.unsubscribe(identity, channel, listener);
+        fin.InterApplicationBus.unsubscribe(
+          { uuid: fin.me.uuid },
+          channel,
+          listener
+        );
       };
 
-      fin.InterApplicationBus.subscribe(identity, channel, listener).catch(
-        (error) => reject(error)
-      );
+      fin.InterApplicationBus.subscribe(
+        { uuid: fin.me.uuid },
+        channel,
+        listener
+      ).catch((error) => reject(error));
     });
   }
 }

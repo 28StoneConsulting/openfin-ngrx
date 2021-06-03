@@ -21,7 +21,7 @@ export class SelectComponent {
 
   selectCounterFromParent() {
     this.electronNgrxService
-      .selectFromParent<number>(doubleCounter, { a: 2 })
+      .selectFromParent<number>(selectCounter)
       .subscribe((data) => (this.counter = data));
   }
 }
