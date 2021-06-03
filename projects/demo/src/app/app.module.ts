@@ -13,7 +13,7 @@ import { MainWindowComponent } from "./main-window/main-window.component";
 import { CounterComponent } from "./counter/counter.component";
 import { NewWindowComponent } from "./new-window/new-window.component";
 import { DispatchComponent } from "./dispatch/dispatch.component";
-import { OpenfinNgrxModule } from "openfin-ngrx";
+import { OpenfinNgrxMetareducerModule } from "openfin-ngrx";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
@@ -36,7 +36,7 @@ import { MatDividerModule } from "@angular/material/divider";
   imports: [
     MatDividerModule,
     MatRadioModule,
-    OpenfinNgrxModule,
+    OpenfinNgrxMetareducerModule,
     BrowserModule,
     FormsModule,
     HttpClientModule,

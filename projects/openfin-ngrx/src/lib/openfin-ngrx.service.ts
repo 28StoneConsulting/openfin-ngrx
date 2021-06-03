@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from "@angular/core";
+import { Injectable, Injector, NgZone } from "@angular/core";
 import { WindowCommunicationService } from "./window-communication.service";
 import { Action, select, Store } from "@ngrx/store";
 import { merge, Observable } from "rxjs";
@@ -30,13 +30,22 @@ interface SelectorEvaluationRequest {
   payload: SelectorPayload;
 }
 
-@Injectable()
+@Injectable({
+  providedIn: "root",
+})
 export class OpenfinNgrxService {
+  store: Store;
+
   constructor(
-    private ngZone: NgZone,
-    private store: Store<any>,
-    private windowCommunicationService: WindowCommunicationService
+    private readonly injector: Injector,
+    private readonly ngZone: NgZone,
+    private readonly windowCommunicationService: WindowCommunicationService
   ) {
+    // this tricky injection is needed to avoid angular circle dependency validation when this service is used from Store metareducer
+    setTimeout(() => {
+      this.store = this.injector.get(Store);
+    });
+
     const myMessages = merge<MessageWithReplay<EvaluationRequest>>(
       this.windowCommunicationService.listenToParentChannel(),
       this.windowCommunicationService.listenToRouteChannel(),
@@ -109,6 +118,10 @@ export class OpenfinNgrxService {
       selector,
       props
     );
+  }
+
+  isOpenFinEnvironment() {
+    return !!window.fin;
   }
 
   private selectFromWindowInternal<T>(

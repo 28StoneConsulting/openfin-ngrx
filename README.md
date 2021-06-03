@@ -10,7 +10,8 @@ Implementing such a communication solution for multiple windows that transfer a 
 
 OpenfinNgrx offers an easy to use solution. It seamlessly dispatches actions and selects data from states across multiple windows.
 
-##Usge:
+### Usage
+
 OpenfinNgrx delivers an Angular service with the following methods:
 
 `dispatchToParent` - Dispatch NGRX action to the window parent.
@@ -23,13 +24,13 @@ OpenfinNgrx delivers an Angular service with the following methods:
 
 `selectFromParent` - select data from parent window state.
 
-## change detection
+## Change detection
 
 By default NgZone isn't aware of the OpenFin IAB.
 This may cause issues when messages from IAB are received and the change detection isn't triggered.
 OpenfinNgrx takes care of this problem by triggering the Angular change detection after every action that affects the window such as dispatching an action received from another window or receiving data from another window's state.
 
-## example
+## OpenfinNgrxService usage example
 
 Dispatch increment action to the parent window's state.
 
@@ -46,6 +47,38 @@ export class ChildWindowComponent {
 ```
 
 OpenfinNgrx will dispatch the action to the parent window's state, assuring that the Angular change detection will be triggered on the parent window.
+
+It is also possible to import OpenfinNgrxMetareducerModule to register NGRX metareducer that will call OpenfinNgrxService methods based on action routing metadata.
+
+## Metareducer usage example
+
+Dispatch increment action to the particular window's sate.
+
+```typescript
+export const incrementAction = createAction(
+  "[Counter] Increment",
+  props<{ payload: number; routing?: RoutingInfo }>()
+);
+
+export class ChildWindowComponent {
+  constructor(private store: Store) {}
+
+  increaseCounterOnParentWindow(increaseBy) {
+    this.store.dispatch(
+      incrementAction({
+        paylaod: increaseBy,
+        // type: 'parent' | 'window' | 'route'
+        // remoteOnly flag blocks local dispatch of an action
+        // if no routing info is provided then action is dispatched only locally as usual
+        routing: {
+          receivers: [{ type: "window", name: "window_name" }],
+          remoteOnly: true,
+        },
+      })
+    );
+  }
+}
+```
 
 ## Demo
 

@@ -24,7 +24,9 @@ interface SubscriptionRequest<T> {
   senderIdentity: Identity;
 }
 
-@Injectable()
+@Injectable({
+  providedIn: "root",
+})
 export class WindowCommunicationService {
   private static messagesCounter = 0;
   private replay: Observable<any>;

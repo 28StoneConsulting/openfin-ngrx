@@ -1,5 +1,20 @@
-import {createAction} from '@ngrx/store';
+import { createAction } from "@ngrx/store";
+import { ActionReceiver, RoutingInfo } from "openfin-ngrx";
 
-export const increment = createAction('[Counter Component] Increment');
-export const decrement = createAction('[Counter Component] Decrement');
-export const reset = createAction('[Counter Component] Reset');
+const routingFunction = (
+  receivers?: ActionReceiver | ActionReceiver[],
+  remoteOnly?: boolean
+): { routing?: RoutingInfo } =>
+  receivers ? { routing: { receivers, remoteOnly } } : {};
+
+export const increment = createAction(
+  "[Counter Component] Increment",
+  routingFunction
+);
+
+export const decrement = createAction(
+  "[Counter Component] Decrement",
+  routingFunction
+);
+
+export const reset = createAction("[Counter Component] Reset", routingFunction);

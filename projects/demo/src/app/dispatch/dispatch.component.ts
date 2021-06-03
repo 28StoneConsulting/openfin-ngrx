@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { OpenfinNgrxService } from "openfin-ngrx";
+import { Store } from "@ngrx/store";
 import { decrement, increment } from "../counter/state/counter.actions";
 
 @Component({
@@ -8,25 +8,29 @@ import { decrement, increment } from "../counter/state/counter.actions";
   styleUrls: ["./dispatch.component.scss"],
 })
 export class DispatchComponent {
-  constructor(private openfinNgrx: OpenfinNgrxService) {}
+  constructor(private store: Store) {}
 
   sendToParent(action: string) {
-    this.openfinNgrx.dispatchToParent(
-      action === "increment" ? increment() : decrement()
+    this.store.dispatch(
+      action === "increment"
+        ? increment({ type: "parent" }, true)
+        : decrement({ type: "parent" }, true)
     );
   }
 
   sendToRoute(action: string, route: string) {
-    this.openfinNgrx.dispatchToRoute(
-      action === "increment" ? increment() : decrement(),
-      route
+    this.store.dispatch(
+      action === "increment"
+        ? increment({ type: "route", name: route }, true)
+        : decrement({ type: "route", name: route }, true)
     );
   }
 
   sendToWindow(action: string, windowName: string) {
-    this.openfinNgrx.dispatchToWindow(
-      action === "increment" ? increment() : decrement(),
-      windowName
+    this.store.dispatch(
+      action === "increment"
+        ? increment({ type: "window", name: windowName }, true)
+        : decrement({ type: "window", name: windowName }, true)
     );
   }
 }
