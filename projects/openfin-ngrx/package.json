@@ -2,14 +2,12 @@
   "name": "openfin-ngrx",
   "version": "0.0.0-semantically-released",
   "peerDependencies": {
-    "@angular/common": "^8.1.2",
-    "@angular/core": "^8.1.2",
+    "@angular/common": "^11.0.0",
+    "@angular/core": "^11.0.0",
     "@ngrx/store": "*",
     "rxjs": "^6.0.0"
   },
-  "devDependencies": {
-    "electron-mock-ipc": "^0.1.3"
-  },
+  "devDependencies": {},
   "author": "Alexey Valner",
   "repository": "https://github.com/28StoneConsulting/openfin-ngrx",
   "dependencies": {

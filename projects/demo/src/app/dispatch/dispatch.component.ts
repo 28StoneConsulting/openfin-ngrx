@@ -8,23 +8,23 @@ import { decrement, increment } from "../counter/state/counter.actions";
   styleUrls: ["./dispatch.component.scss"],
 })
 export class DispatchComponent {
-  constructor(private electronNgrx: OpenfinNgrxService) {}
+  constructor(private openfinNgrx: OpenfinNgrxService) {}
 
   sendToParent(action: string) {
-    this.electronNgrx.dispatchToParent(
+    this.openfinNgrx.dispatchToParent(
       action === "increment" ? increment() : decrement()
     );
   }
 
   sendToRoute(action: string, route: string) {
-    this.electronNgrx.dispatchToRoute(
+    this.openfinNgrx.dispatchToRoute(
       action === "increment" ? increment() : decrement(),
       route
     );
   }
 
   sendToWindow(action: string, windowName: string) {
-    this.electronNgrx.dispatchToWindow(
+    this.openfinNgrx.dispatchToWindow(
       action === "increment" ? increment() : decrement(),
       windowName
     );

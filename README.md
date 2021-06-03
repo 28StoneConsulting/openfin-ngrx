@@ -45,7 +45,7 @@ export class ChildWindowComponent {
 }
 ```
 
-ElectronNgrx will dispatch the action to the parent window's state, assuring that the Angular change detection will be triggered on the parent window.
+OpenfinNgrx will dispatch the action to the parent window's state, assuring that the Angular change detection will be triggered on the parent window.
 
 ## Demo
 

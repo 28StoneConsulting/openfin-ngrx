@@ -5,7 +5,6 @@ import { Subject } from "rxjs";
 import { communicationChannel } from "../lib/communication-channels";
 
 xdescribe("window communication service", () => {
-  let electronMock;
   let routerEvents;
 
   beforeEach(() => {

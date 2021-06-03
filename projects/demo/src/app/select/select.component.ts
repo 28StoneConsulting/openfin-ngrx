@@ -11,16 +11,16 @@ export class SelectComponent {
   selectFrom: "id" | "parent" = "id";
   counter: number;
 
-  constructor(private electronNgrxService: OpenfinNgrxService) {}
+  constructor(private openfinNgrxService: OpenfinNgrxService) {}
 
   selectCounterFromWindow(windowName: string) {
-    this.electronNgrxService
+    this.openfinNgrxService
       .selectFromWindow<number>(windowName, selectCounter)
       .subscribe((data) => (this.counter = data));
   }
 
   selectCounterFromParent() {
-    this.electronNgrxService
+    this.openfinNgrxService
       .selectFromParent<number>(selectCounter)
       .subscribe((data) => (this.counter = data));
   }
