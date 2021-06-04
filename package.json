@@ -94,20 +94,6 @@
   },
   "release": {
     "pkgRoot": "dist/openfin-ngrx",
-    "defaultBranch": "main",
-    "branches": [
-      "+([0-9])?(.{+([0-9]),x}).x",
-      "$default-branch",
-      "next",
-      "next-major",
-      {
-        "name": "beta",
-        "prerelease": true
-      },
-      {
-        "name": "alpha",
-        "prerelease": true
-      }
-    ]
+    "branches": ["main"]
   }
 }
