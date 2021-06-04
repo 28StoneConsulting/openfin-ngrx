@@ -55,28 +55,47 @@ It is also possible to import OpenfinNgrxMetareducerModule to register NGRX meta
 Dispatch increment action to the particular window's sate.
 
 ```typescript
-export const incrementAction = createAction(
-  "[Counter] Increment",
+import { createAction, props, Store } from "@ngrx/store";
+import { RoutingInfo } from "openfin-ngrx";
+
+export const incrementBy = createAction(
+  "[Counter] IncrementBy",
   props<{ payload: number; routing?: RoutingInfo }>()
 );
 
 export class ChildWindowComponent {
   constructor(private store: Store) {}
 
-  increaseCounterOnParentWindow(increaseBy) {
-    this.store.dispatch(
-      incrementAction({
-        paylaod: increaseBy,
-        // type: 'parent' | 'window' | 'route'
-        // remoteOnly flag blocks local dispatch of an action
-        // if no routing info is provided then action is dispatched only locally as usual
-        routing: {
-          receivers: [{ type: "window", name: "window_name" }],
-          remoteOnly: true,
-        },
-      })
-    );
-  }
+  this.store.dispatch(
+    incrementBy({
+      paylaod: increaseBy,
+      // type: 'parent' | 'window' | 'route'
+      // remoteOnly flag blocks local dispatch of an action
+      // if no routing info is provided then action is dispatched only locally as usual
+      routing: {
+        receivers: [{ type: "window", name: "window_name" }],
+        remoteOnly: true,
+      },
+    })
+  );
+}
+```
+
+Dispatch increment action to the parent window's sate with action creator with prconfigured routing info.
+
+```typescript
+import { createAction, Store } from "@ngrx/store";
+import { routingProps } from "openfin-ngrx";
+
+export const incrementParentBy = createAction(
+  "[Counter] IncrementBy",
+  routingProps<number>({ type: "parent" }, true)
+);
+
+export class ChildWindowComponent {
+  constructor(private store: Store) {}
+
+  this.store.dispatch(incrementParentBy(increaseBy));
 }
 ```
 
