@@ -39,9 +39,7 @@ export class ChildWindowComponent {
   constructor(private openfinNgrxService: OpenfinNgrxService) {}
 
   increaseCounterOnParentWindow(increaseBy) {
-    this.openfinNgrxService.dispatchToParent(
-      incrementAction({ paylaod: increaseBy })
-    );
+    this.openfinNgrxService.dispatchToParent(incrementAction({ paylaod: increaseBy }));
   }
 }
 ```
@@ -55,13 +53,10 @@ It is also possible to import OpenfinNgrxMetareducerModule to register NGRX meta
 Dispatch increment action to the particular window's store.
 
 ```typescript
-import { createAction, props, Store } from "@ngrx/store";
-import { RoutingInfo } from "openfin-ngrx";
+import { createAction, props, Store } from '@ngrx/store';
+import { RoutingInfo } from 'openfin-ngrx';
 
-export const incrementBy = createAction(
-  "[Counter] IncrementBy",
-  props<{ payload: number; routing?: RoutingInfo }>()
-);
+export const incrementBy = createAction('[Counter] IncrementBy', props<{ payload: number; routing?: RoutingInfo }>());
 
 export class ChildWindowComponent {
   constructor(private store: Store) {}
@@ -74,10 +69,10 @@ export class ChildWindowComponent {
         // remoteOnly flag blocks local dispatch of an action
         // if no routing info is provided then action is dispatched only locally as usual
         routing: {
-          receivers: [{ type: "window", name: "window_name" }],
+          receivers: [{ type: 'window', name: 'window_name' }],
           remoteOnly: true,
         },
-      })
+      }),
     );
   }
 }
@@ -86,13 +81,10 @@ export class ChildWindowComponent {
 Dispatch increment action to the parent window's sate with action creator with prconfigured routing info.
 
 ```typescript
-import { createAction, Store } from "@ngrx/store";
-import { routingProps } from "openfin-ngrx";
+import { createAction, Store } from '@ngrx/store';
+import { routingProps } from 'openfin-ngrx';
 
-export const incrementParentBy = createAction(
-  "[Counter] IncrementBy",
-  routingProps<number>({ type: "parent" }, true)
-);
+export const incrementParentBy = createAction('[Counter] IncrementBy', routingProps<number>({ type: 'parent' }, true));
 
 export class ChildWindowComponent {
   constructor(private store: Store) {}
@@ -108,6 +100,7 @@ export class ChildWindowComponent {
 To clone and run the demo you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
 
 ```bash
+
 # Clone this repository
 git clone https://github.com/28StoneConsulting/openfin-ngrx.git
 # Go into the repository
