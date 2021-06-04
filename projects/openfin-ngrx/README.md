@@ -56,7 +56,7 @@ Dispatch increment action to the particular window's store.
 
 ```typescript
 import { createAction, props, Store } from "@ngrx/store";
-import { RoutingInfo } from "openfin-ngrx";
+import { RoutingInfo } from "@28stoneconsulting/openfin-ngrx";
 
 export const incrementBy = createAction(
   "[Counter] IncrementBy",
@@ -87,7 +87,7 @@ Dispatch increment action to the parent window's sate with action creator with p
 
 ```typescript
 import { createAction, Store } from "@ngrx/store";
-import { routingProps } from "openfin-ngrx";
+import { routingProps } from "@28stoneconsulting/openfin-ngrx";
 
 export const incrementParentBy = createAction(
   "[Counter] IncrementBy",
