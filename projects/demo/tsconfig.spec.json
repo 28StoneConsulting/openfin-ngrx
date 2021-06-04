@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../out-tsc/spec",
-    "types": ["jasmine", "node"],
+    "types": ["jasmine", "node", "openfin"],
     "paths": {
       "openfin-ngrx": ["projects/openfin-ngrx/src/public-api.ts"]
     }

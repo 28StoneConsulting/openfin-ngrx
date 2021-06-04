@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { NewWindowComponent } from "./new-window.component";
+import { NewWindowComponent } from './new-window.component';
 
-describe("NewWindowComponent", () => {
+describe('NewWindowComponent', () => {
   let component: NewWindowComponent;
   let fixture: ComponentFixture<NewWindowComponent>;
 
@@ -11,7 +11,7 @@ describe("NewWindowComponent", () => {
       TestBed.configureTestingModule({
         declarations: [NewWindowComponent],
       }).compileComponents();
-    })
+    }),
   );
 
   beforeEach(() => {
@@ -20,7 +20,7 @@ describe("NewWindowComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

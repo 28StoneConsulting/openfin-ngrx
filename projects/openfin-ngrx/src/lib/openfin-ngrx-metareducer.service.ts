@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { Action } from "@ngrx/store";
-import { OpenfinNgrxService } from "./openfin-ngrx.service";
+import { Injectable } from '@angular/core';
+import { Action } from '@ngrx/store';
+import { OpenfinNgrxService } from './openfin-ngrx.service';
 
 export type ActionReceiver = {
-  type: "window" | "route" | "parent";
+  type: 'window' | 'route' | 'parent';
   name?: string;
 };
 
@@ -17,7 +17,7 @@ export interface RoutedAction extends Action {
 }
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class OpenfinNgrxMetareducerService {
   constructor(private readonly openfinNgrxService: OpenfinNgrxService) {}
@@ -31,9 +31,7 @@ export class OpenfinNgrxMetareducerService {
       const remoteAction = { ...action, routing: undefined };
 
       if (Array.isArray(action.routing.receivers)) {
-        action.routing.receivers.forEach((receiver) =>
-          this.processReceiver(receiver, remoteAction)
-        );
+        action.routing.receivers.forEach(receiver => this.processReceiver(receiver, remoteAction));
       } else {
         this.processReceiver(action.routing.receivers, remoteAction);
       }
@@ -44,13 +42,13 @@ export class OpenfinNgrxMetareducerService {
 
   private processReceiver(receiver: ActionReceiver, action: RoutedAction) {
     switch (receiver.type) {
-      case "parent":
+      case 'parent':
         this.openfinNgrxService.dispatchToParent(action);
         break;
-      case "window":
+      case 'window':
         this.openfinNgrxService.dispatchToWindow(action, receiver.name);
         break;
-      case "route":
+      case 'route':
         this.openfinNgrxService.dispatchToRoute(action, receiver.name);
         break;
       default:

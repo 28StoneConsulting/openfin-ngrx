@@ -1,11 +1,11 @@
-import { TestBed } from "@angular/core/testing";
-import { WindowCommunicationService } from "../lib/window-communication.service";
-import { NavigationEnd, Router } from "@angular/router";
-import { Subject } from "rxjs";
-import { communicationChannel } from "../lib/communication-channels";
+import { TestBed } from '@angular/core/testing';
+import { WindowCommunicationService } from '../lib/window-communication.service';
+import { NavigationEnd, Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { communicationChannel } from '../lib/communication-channels';
 
-xdescribe("window communication service", () => {
-  let routerEvents;
+xdescribe('window communication service', () => {
+  // let routerEvents;
 
   beforeEach(() => {
     /*     routerEvents = new Subject();
@@ -20,7 +20,7 @@ xdescribe("window communication service", () => {
  */
   });
 
-  it("should be created", () => {
+  it('should be created', () => {
     /*     const service: WindowCommunicationService = TestBed.get(
       WindowCommunicationService
     );
@@ -28,7 +28,7 @@ xdescribe("window communication service", () => {
  */
   });
 
-  it("should send to parent", () => {
+  it('should send to parent', () => {
     /*     const service: WindowCommunicationService = TestBed.get(
       WindowCommunicationService
     );
@@ -44,7 +44,7 @@ xdescribe("window communication service", () => {
  */
   });
 
-  it("should send to window by id", () => {
+  it('should send to window by id', () => {
     /*     const service: WindowCommunicationService = TestBed.get(
       WindowCommunicationService
     );
@@ -61,7 +61,7 @@ xdescribe("window communication service", () => {
  */
   });
 
-  it("should send to route", (done) => {
+  it('should send to route', done => {
     /*     const service: WindowCommunicationService = TestBed.get(
       WindowCommunicationService
     );
@@ -75,7 +75,7 @@ xdescribe("window communication service", () => {
     service.sendToRoute("/", mockData);
  */
   });
-  describe("should send replay message", () => {
+  describe('should send replay message', () => {
     /*     const windowId = 1;
     const messageId = 2;
     const replayData = "replay";
@@ -102,7 +102,7 @@ xdescribe("window communication service", () => {
  */
   });
 
-  it("when parent chanel emit message", (done) => {
+  it('when parent chanel emit message', done => {
     /*       const service: WindowCommunicationService = TestBed.get(
         WindowCommunicationService
       );
@@ -125,7 +125,7 @@ xdescribe("window communication service", () => {
  */
   });
 
-  it("should return replay message", (done) => {
+  it('should return replay message', done => {
     /*     const service: WindowCommunicationService = TestBed.get(
       WindowCommunicationService
     );

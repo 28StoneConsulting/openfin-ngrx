@@ -1,10 +1,10 @@
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { DispatchComponent } from "./dispatch.component";
-import { FormsModule } from "@angular/forms";
-import { OpenfinNgrxService } from "openfin-ngrx";
+import { DispatchComponent } from './dispatch.component';
+import { FormsModule } from '@angular/forms';
+import { OpenfinNgrxService } from 'openfin-ngrx';
 
-describe("IpcComponent", () => {
+describe('IpcComponent', () => {
   let component: DispatchComponent;
   let fixture: ComponentFixture<DispatchComponent>;
   const mockWindId = 1;
@@ -16,7 +16,7 @@ describe("IpcComponent", () => {
         imports: [FormsModule],
         providers: [{ provide: OpenfinNgrxService, useValue: {} }],
       }).compileComponents();
-    })
+    }),
   );
 
   beforeEach(() => {
@@ -25,7 +25,7 @@ describe("IpcComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

@@ -1,14 +1,14 @@
-import { Component } from "@angular/core";
-import { OpenfinNgrxService } from "openfin-ngrx";
-import { doubleCounter, selectCounter } from "../counter/state/counter.reducer";
+import { Component } from '@angular/core';
+import { OpenfinNgrxService } from 'openfin-ngrx';
+import { doubleCounter, selectCounter } from '../counter/state/counter.reducer';
 
 @Component({
-  selector: "app-select",
-  templateUrl: "./select.component.html",
-  styleUrls: ["./select.component.scss"],
+  selector: 'app-select',
+  templateUrl: './select.component.html',
+  styleUrls: ['./select.component.scss'],
 })
 export class SelectComponent {
-  selectFrom: "id" | "parent" = "id";
+  selectFrom: 'id' | 'parent' = 'id';
   counter: number;
 
   constructor(private openfinNgrxService: OpenfinNgrxService) {}
@@ -16,12 +16,10 @@ export class SelectComponent {
   selectCounterFromWindow(windowName: string) {
     this.openfinNgrxService
       .selectFromWindow<number>(windowName, selectCounter)
-      .subscribe((data) => (this.counter = data));
+      .subscribe(data => (this.counter = data));
   }
 
   selectCounterFromParent() {
-    this.openfinNgrxService
-      .selectFromParent<number>(selectCounter)
-      .subscribe((data) => (this.counter = data));
+    this.openfinNgrxService.selectFromParent<number>(selectCounter).subscribe(data => (this.counter = data));
   }
 }

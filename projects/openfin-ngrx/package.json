@@ -1,5 +1,5 @@
 {
-  "name": "openfin-ngrx",
+  "name": "@28stoneconsulting/openfin-ngrx",
   "version": "0.0.0-semantically-released",
   "peerDependencies": {
     "@angular/common": "^11.0.0",
