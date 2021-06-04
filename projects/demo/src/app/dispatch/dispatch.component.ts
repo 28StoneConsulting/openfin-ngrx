@@ -1,6 +1,11 @@
 import { Component } from "@angular/core";
 import { Store } from "@ngrx/store";
-import { decrement, increment } from "../counter/state/counter.actions";
+import {
+  decrement,
+  decrementParent,
+  increment,
+  incrementParent,
+} from "../counter/state/counter.actions";
 
 @Component({
   selector: "app-dispatch",
@@ -12,9 +17,7 @@ export class DispatchComponent {
 
   sendToParent(action: string) {
     this.store.dispatch(
-      action === "increment"
-        ? increment({ type: "parent" }, true)
-        : decrement({ type: "parent" }, true)
+      action === "increment" ? incrementParent() : decrementParent()
     );
   }
 

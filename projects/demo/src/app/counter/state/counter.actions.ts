@@ -1,5 +1,5 @@
 import { createAction } from "@ngrx/store";
-import { ActionReceiver, RoutingInfo } from "openfin-ngrx";
+import { ActionReceiver, RoutingInfo, routingProps } from "openfin-ngrx";
 
 const routingFunction = (
   receivers?: ActionReceiver | ActionReceiver[],
@@ -15,6 +15,16 @@ export const increment = createAction(
 export const decrement = createAction(
   "[Counter Component] Decrement",
   routingFunction
+);
+
+export const incrementParent = createAction(
+  "[Counter Component] Increment",
+  routingProps({ type: "parent" }, true)
+);
+
+export const decrementParent = createAction(
+  "[Counter Component] Decrement",
+  routingProps({ type: "parent" }, true)
 );
 
 export const reset = createAction("[Counter Component] Reset", routingFunction);
