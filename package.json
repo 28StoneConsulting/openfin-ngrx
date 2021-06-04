@@ -7,7 +7,7 @@
     "build": "npm run lib:build && npm run demo:build",
     "test": "ng test demo --watch false && ng test openfin-ngrx --watch false",
     "lint": "ng lint",
-    "lib:build": "ng build openfin-ngrx",
+    "lib:build": "ng build openfin-ngrx --prod",
     "lib:test": "ng test openfin-ngrx",
     "lib:ci:test": "ng test openfin-ngrx --watch false --progress false --browsers ChromeHeadless --code-coverage",
     "demo:test": "ng test demo",

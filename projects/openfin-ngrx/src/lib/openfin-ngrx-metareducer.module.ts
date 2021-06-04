@@ -2,14 +2,18 @@ import { NgModule } from '@angular/core';
 import { ActionReducer, MetaReducer, META_REDUCERS } from '@ngrx/store';
 import { OpenfinNgrxMetareducerService } from './openfin-ngrx-metareducer.service';
 
-function metaReducerFactory(metareducerService: OpenfinNgrxMetareducerService): MetaReducer<any> {
-  return (reducer: ActionReducer<any>) => (state, action) => {
-    if (metareducerService.processStoreAction(action)) {
-      return reducer(state, action);
-    }
+export function metaReducerFactory(metareducerService: OpenfinNgrxMetareducerService): MetaReducer<any> {
+  function metaReducer(reducer: ActionReducer<any>) {
+    return function actionReducer(state, action) {
+      if (metareducerService.processStoreAction(action)) {
+        return reducer(state, action);
+      }
 
-    return state;
-  };
+      return state;
+    };
+  }
+
+  return metaReducer;
 }
 
 @NgModule({
