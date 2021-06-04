@@ -66,18 +66,20 @@ export const incrementBy = createAction(
 export class ChildWindowComponent {
   constructor(private store: Store) {}
 
-  this.store.dispatch(
-    incrementBy({
-      paylaod: increaseBy,
-      // type: 'parent' | 'window' | 'route'
-      // remoteOnly flag blocks local dispatch of an action
-      // if no routing info is provided then action is dispatched only locally as usual
-      routing: {
-        receivers: [{ type: "window", name: "window_name" }],
-        remoteOnly: true,
-      },
-    })
-  );
+  increaseCounterOnParentWindow(increaseBy) {
+    this.store.dispatch(
+      incrementBy({
+        paylaod: increaseBy,
+        // type: 'parent' | 'window' | 'route'
+        // remoteOnly flag blocks local dispatch of an action
+        // if no routing info is provided then action is dispatched only locally as usual
+        routing: {
+          receivers: [{ type: "window", name: "window_name" }],
+          remoteOnly: true,
+        },
+      })
+    );
+  }
 }
 ```
 
@@ -95,7 +97,9 @@ export const incrementParentBy = createAction(
 export class ChildWindowComponent {
   constructor(private store: Store) {}
 
-  this.store.dispatch(incrementParentBy(increaseBy));
+  increaseCounterOnParentWindow(increaseBy) {
+    this.store.dispatch(incrementParentBy(increaseBy));
+  }
 }
 ```
 
