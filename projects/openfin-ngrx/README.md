@@ -32,7 +32,7 @@ OpenfinNgrx takes care of this problem by triggering the Angular change detectio
 
 ## OpenfinNgrxService usage example
 
-Dispatch increment action to the parent window's state.
+Dispatch increment action to the parent window's store.
 
 ```typescript
 export class ChildWindowComponent {
@@ -52,7 +52,7 @@ It is also possible to import OpenfinNgrxMetareducerModule to register NGRX meta
 
 ## Metareducer usage example
 
-Dispatch increment action to the particular window's sate.
+Dispatch increment action to the particular window's store.
 
 ```typescript
 import { createAction, props, Store } from "@ngrx/store";
