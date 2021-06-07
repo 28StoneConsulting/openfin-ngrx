@@ -10,8 +10,14 @@ export const increment = createAction('[Counter Component] Increment', routingFu
 
 export const decrement = createAction('[Counter Component] Decrement', routingFunction);
 
-export const incrementParent = createAction('[Counter Component] Increment', routingProps({ type: 'parent' }, true));
+export const incrementParent = createAction(
+  '[Counter Component] IncrementParent',
+  routingProps({ type: 'parent' }, true),
+);
 
-export const decrementParent = createAction('[Counter Component] Decrement', routingProps({ type: 'parent' }, true));
+export const decrementParentBy = createAction(
+  '[Counter Component] DecrementParentBy',
+  routingProps<{ decrementBy: number }>({ type: 'parent' }, true),
+);
 
 export const reset = createAction('[Counter Component] Reset', routingFunction);

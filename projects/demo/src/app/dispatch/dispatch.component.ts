@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { decrement, decrementParent, increment, incrementParent } from '../counter/state/counter.actions';
+import { decrement, decrementParentBy, increment, incrementParent } from '../counter/state/counter.actions';
 
 @Component({
   selector: 'app-dispatch',
@@ -11,7 +11,7 @@ export class DispatchComponent {
   constructor(private store: Store) {}
 
   sendToParent(action: string) {
-    this.store.dispatch(action === 'increment' ? incrementParent() : decrementParent());
+    this.store.dispatch(action === 'increment' ? incrementParent() : decrementParentBy({ decrementBy: 1 }));
   }
 
   sendToRoute(action: string, route: string) {
