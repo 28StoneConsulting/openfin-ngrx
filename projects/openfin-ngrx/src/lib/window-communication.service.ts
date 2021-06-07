@@ -230,7 +230,7 @@ export class WindowCommunicationService {
   private getWindowRoute(): Observable<string> {
     return this.router.events.pipe(
       filter(e => e instanceof NavigationEnd),
-      map((e: NavigationEnd) => e.url),
+      map((e: NavigationEnd) => e.urlAfterRedirects),
     );
   }
 

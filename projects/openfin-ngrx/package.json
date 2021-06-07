@@ -2,17 +2,15 @@
   "name": "@28stoneconsulting/openfin-ngrx",
   "version": "0.0.0-semantically-released",
   "peerDependencies": {
-    "@angular/common": "^11.0.0",
-    "@angular/core": "^11.0.0",
+    "@angular/common": "^11.1.2",
+    "@angular/core": "^11.1.2",
     "@ngrx/store": "*",
-    "rxjs": "^6.0.0"
+    "rxjs": "^6.0.0",
+    "tslib": "^2.0.0"
   },
   "devDependencies": {},
   "author": "Alexey Valner",
   "repository": "https://github.com/28StoneConsulting/openfin-ngrx",
-  "dependencies": {
-    "tslib": "^2.0.0"
-  },
   "license": "ISC",
   "publishConfig": {
     "access": "public"

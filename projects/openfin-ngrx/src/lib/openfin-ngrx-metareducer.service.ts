@@ -27,14 +27,16 @@ export class OpenfinNgrxMetareducerService {
       return true;
     }
 
-    if (this.openfinNgrxService.isOpenFinEnvironment()) {
-      const remoteAction = { ...action, routing: undefined };
+    if (!this.openfinNgrxService.isOpenFinEnvironment()) {
+      return !action.routing.remoteOnly;
+    }
 
-      if (Array.isArray(action.routing.receivers)) {
-        action.routing.receivers.forEach(receiver => this.processReceiver(receiver, remoteAction));
-      } else {
-        this.processReceiver(action.routing.receivers, remoteAction);
-      }
+    const remoteAction = { ...action, routing: undefined };
+
+    if (Array.isArray(action.routing.receivers)) {
+      action.routing.receivers.forEach(receiver => this.processReceiver(receiver, remoteAction));
+    } else {
+      this.processReceiver(action.routing.receivers, remoteAction);
     }
 
     return !action.routing.remoteOnly;
