@@ -37,6 +37,10 @@ export class OpenfinNgrxService {
     private readonly ngZone: NgZone,
     private readonly windowCommunicationService: WindowCommunicationService,
   ) {
+    if (!this.isOpenFinEnvironment()) {
+      return;
+    }
+
     // this tricky injection is needed to avoid angular circle dependency validation when this service is used from Store metareducer
     setTimeout(() => {
       this.store = this.injector.get(Store);

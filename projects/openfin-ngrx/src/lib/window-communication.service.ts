@@ -25,13 +25,17 @@ export class WindowCommunicationService {
   subscription: Observable<{}>;
 
   constructor(private router: Router) {
+    if (!window.fin) {
+      return;
+    }
+
     this.window = fin.Window.getCurrentSync();
 
     fin.Window.getCurrentSync()
       .getParentWindow()
       .then(parent => (this.parentWindow = parent));
-    this.replay = this.listenToChannel(communicationChannel.replay).pipe(share());
 
+    this.replay = this.listenToChannel(communicationChannel.replay).pipe(share());
     this.subscription = this.listenToChannel(communicationChannel.subscription).pipe(share());
   }
 
