@@ -23,12 +23,8 @@ export class OpenfinNgrxMetareducerService {
   constructor(private readonly openfinNgrxService: OpenfinNgrxService) {}
 
   processStoreAction(action: RoutedAction) {
-    if (!action.routing) {
+    if (!action.routing || !this.openfinNgrxService.isOpenFinEnvironment()) {
       return true;
-    }
-
-    if (!this.openfinNgrxService.isOpenFinEnvironment()) {
-      return !action.routing.remoteOnly;
     }
 
     const remoteAction = { ...action, routing: undefined };
