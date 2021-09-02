@@ -133,20 +133,38 @@ export class WindowCommunicationService {
       .subscribe((command: { type: SubscriptionCommand }) => {
         if (command.type === SubscriptionCommand.subscribe) {
           subscription = srcObservable.pipe(takeUntil(cleanup)).subscribe(
-            data =>
+            data => {
+              if (!fin.Window.wrapSync(windowIdentity)) {
+                subscription.unsubscribe();
+                return;
+              }
+
               this.sendToWindowChannel(channel, windowIdentity, {
                 type: SubscriptionCommand.next,
                 data,
-              }),
-            error =>
+              });
+            },
+            error => {
+              if (!fin.Window.wrapSync(windowIdentity)) {
+                subscription.unsubscribe();
+                return;
+              }
+
               this.sendToWindowChannel(channel, windowIdentity, {
                 type: SubscriptionCommand.error,
                 data: error,
-              }),
-            () =>
+              });
+            },
+            () => {
+              if (!fin.Window.wrapSync(windowIdentity)) {
+                subscription.unsubscribe();
+                return;
+              }
+
               this.sendToWindowChannel(channel, windowIdentity, {
                 type: SubscriptionCommand.complete,
-              }),
+              });
+            },
           );
         } else if (command.type === SubscriptionCommand.unsubscribe) {
           subscription.unsubscribe();
