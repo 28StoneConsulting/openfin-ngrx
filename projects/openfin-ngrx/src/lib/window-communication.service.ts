@@ -104,10 +104,15 @@ export class WindowCommunicationService {
           data: message.data,
           response: (observable: Observable<any>) => {
             const channel = communicationChannel.subscription + message.messageId;
-            const cleanup = this.onWindowClose(fin.Window.wrapSync(message.senderIdentity));
+            const wnd = fin.Window.wrapSync(message.senderIdentity);
+            const cleanup = this.onWindowClose(wnd);
             this.sendObservableOnChannel(channel, cleanup, observable, message.senderIdentity);
             this.sendToWindowChannel(channel, message.senderIdentity, {
               type: SubscriptionCommand.listening,
+            });
+
+            cleanup.subscribe(() => {
+              wnd.close(true);
             });
           },
         };
@@ -183,6 +188,7 @@ export class WindowCommunicationService {
           .subscribe(() => {
             subscriber.complete();
             cleanup.next();
+            window.close(true);
           });
 
         this.listenToChannel(channel)
@@ -263,7 +269,7 @@ export class WindowCommunicationService {
   }
 
   private onWindowClose(window: _Window): Observable<any> {
-    return fromEvent(window, 'closed').pipe(first());
+    return fromEvent(window, 'close-requested').pipe(first());
   }
 
   private waitForWindowToListen(channel: string): Promise<void> {
