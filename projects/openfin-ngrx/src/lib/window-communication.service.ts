@@ -277,7 +277,7 @@ export class WindowCommunicationService {
       const listener = (data: { type: string }) => {
         data.type === SubscriptionCommand.listening
           ? resolve()
-          : // tslint:disable-next-line:max-line-length
+          :
             reject(
               `The first message on channel is supposed to be:{type:${
                 SubscriptionCommand.listening
